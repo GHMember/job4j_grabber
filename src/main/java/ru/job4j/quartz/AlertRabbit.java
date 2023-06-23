@@ -38,19 +38,6 @@ public class AlertRabbit {
     }
 
     private static int getInterval() {
-<<<<<<< HEAD
-        try(InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
-            Properties config = new Properties();
-            config.load(in);
-            return Integer.parseInt(config.getProperty("rabbit.interval"));
-        }
-        catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-}
-=======
         try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
             Properties config = new Properties();
             config.load(in);
@@ -60,4 +47,3 @@ public class AlertRabbit {
         }
     }
 }
->>>>>>> 279a417 (1. Quartz [#175122])
