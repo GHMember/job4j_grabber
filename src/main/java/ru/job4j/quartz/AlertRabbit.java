@@ -26,7 +26,7 @@ public class AlertRabbit {
                     .usingJobData(data)
                     .build();
             SimpleScheduleBuilder times = simpleSchedule()
-                    .withIntervalInSeconds(5)
+                    .withIntervalInSeconds(AlertRabbit.getInterval())
                     .repeatForever();
             Trigger trigger = newTrigger()
                     .startNow()
@@ -70,6 +70,17 @@ public class AlertRabbit {
                     config.getProperty("password")
             );
             return cnt;
+        }
+    }
+
+    private static int getInterval() {
+        try(InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
+            Properties config = new Properties();
+            config.load(in);
+            return Integer.parseInt(config.getProperty("rabbit.interval"));
+        }
+        catch (IOException e) {
+            throw new IllegalStateException(e);
         }
     }
 }
