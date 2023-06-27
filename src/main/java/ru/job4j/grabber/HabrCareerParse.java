@@ -15,6 +15,19 @@ public class HabrCareerParse {
 
     private static final String PAGE_LINK = String.format("%s/vacancies/java_developer", SOURCE_LINK);
 
+    private static String retrieveDescription(String link) throws IOException {
+        Connection connection = Jsoup.connect(link);
+        Document document = connection.get();
+        Elements rows = document.select(".vacancy-description__text");
+        StringBuilder sb = new StringBuilder();
+        for (Element row : rows) {
+            for (Element el : row.children()) {
+                sb.append(el.text()).append(System.lineSeparator());
+            }
+        }
+        return sb.toString();
+    }
+
     public static void main(String[] args) throws IOException {
         for (int i = 1; i <= 5; i++) {
             String page = String.format("%s?page=%d", PAGE_LINK, i);
@@ -32,6 +45,11 @@ public class HabrCareerParse {
                 String vacancyDate = dateLinkElement.attr("datetime");
                 LocalDateTime dateTime = new HabrCareerDateTimeParser().parse(vacancyDate);
                 System.out.printf("%s %s %s%n", vacancyName, link, dateTime);
+                try {
+                    System.out.println(HabrCareerParse.retrieveDescription(link));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             });
         }
     }
