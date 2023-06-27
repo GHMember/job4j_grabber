@@ -8,12 +8,17 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
-public class HabrCareerParse {
+public class HabrCareerParse implements Parse{
 
     private static final String SOURCE_LINK = "https://career.habr.com";
-
     private static final String PAGE_LINK = String.format("%s/vacancies/java_developer", SOURCE_LINK);
+    private final DateTimeParser dateTimeParser;
+
+    public HabrCareerParse(DateTimeParser dateTimeParser) {
+        this.dateTimeParser = dateTimeParser;
+    }
 
     private static String retrieveDescription(String link) throws IOException {
         Connection connection = Jsoup.connect(link);
@@ -26,6 +31,11 @@ public class HabrCareerParse {
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    public List<Post> list(String link) throws IOException {
+        return null;
     }
 
     public static void main(String[] args) throws IOException {
