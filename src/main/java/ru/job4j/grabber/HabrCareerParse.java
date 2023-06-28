@@ -34,6 +34,19 @@ public class HabrCareerParse implements Parse {
         return sb.toString();
     }
 
+    public Post createPost(Element row) throws IOException {
+        Element titleElement = row.select(".vacancy-card__title").first();
+        Element linkElement = titleElement.child(0);
+        String vacancyName = titleElement.text();
+        String vacancyLink = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
+        Element dateElement = row.select(".vacancy-card__date").first();
+        Element dateLinkElement = dateElement.child(0);
+        String vacancyDate = dateLinkElement.attr("datetime");
+        LocalDateTime dateTime = dateTimeParser.parse(vacancyDate);
+        String vacancyDescription = HabrCareerParse.retrieveDescription(vacancyLink);
+        return new Post(vacancyName, vacancyLink, vacancyDescription, dateTime);
+    }
+
     @Override
     public List<Post> list(String link) throws IOException {
         List<Post> posts = new ArrayList<>();
@@ -44,16 +57,8 @@ public class HabrCareerParse implements Parse {
             Document document = connection.get();
             Elements rows = document.select(".vacancy-card__inner");
             for (Element row : rows) {
-                Element titleElement = row.select(".vacancy-card__title").first();
-                Element linkElement = titleElement.child(0);
-                String vacancyName = titleElement.text();
-                String vacancyLink = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
-                Element dateElement = row.select(".vacancy-card__date").first();
-                Element dateLinkElement = dateElement.child(0);
-                String vacancyDate = dateLinkElement.attr("datetime");
-                LocalDateTime dateTime = dateTimeParser.parse(vacancyDate);
-                String vacancyDescription = HabrCareerParse.retrieveDescription(vacancyLink);
-                posts.add(new Post(vacancyName, vacancyLink, vacancyDescription, dateTime));
+                Post post = createPost(row);
+                posts.add(post);
             }
         }
         System.out.println("Parsing finished" + System.lineSeparator());
