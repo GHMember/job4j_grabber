@@ -73,25 +73,4 @@ public class PsqlStore implements Store {
             cnn.close();
         }
     }
-
-    public static void main(String[] args) throws Exception {
-        InputStream in = PsqlStore.class.getClassLoader().getResourceAsStream("grabber.properties");
-        Properties config = new Properties();
-        config.load(in);
-        try (PsqlStore store = new PsqlStore(config)) {
-            store.save(new Post("Title", "Text", "Link", LocalDateTime.now()));
-            List<Post> posts = store.getAll();
-            for (Post post : posts) {
-                System.out.println(post.getTitle());
-                System.out.println(post.getLink());
-                System.out.println(post.getCreated());
-                System.out.println(post.getDescription());
-            }
-            Post post = store.findById(1);
-            System.out.println(post.getTitle());
-            System.out.println(post.getLink());
-            System.out.println(post.getCreated());
-            System.out.println(post.getDescription());
-        }
-    }
 }

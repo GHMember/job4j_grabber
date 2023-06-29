@@ -64,14 +64,4 @@ public class HabrCareerParse implements Parse {
         System.out.println("Parsing finished" + System.lineSeparator());
         return posts;
     }
-
-    public static void main(String[] args) throws IOException {
-        DateTimeParser dateTimeParser = new HabrCareerDateTimeParser();
-        HabrCareerParse parser = new HabrCareerParse(dateTimeParser);
-        String pageLink = String.format("%s/vacancies/java_developer", SOURCE_LINK);
-        List<Post> posts = parser.list(pageLink);
-        for (Post post : posts) {
-            System.out.println(post.getDescription());
-        }
-    }
 }
